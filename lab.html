@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>实验台 · 最小系统大师</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a1824'/%3E%3Ccircle cx='16' cy='7' r='4' fill='%23b8382f'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23c08d1c'/%3E%3Ccircle cx='16' cy='25' r='4' fill='%232a6c9e'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=20261023j2">
+<script>try{var t=localStorage.getItem('minsys_theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+<script src="ui.js?v=20261023j2" defer></script>
+</head>
+<body>
+<script>if(location.protocol==='file:'){document.write('<div style="margin:0;padding:16px 22px;background:#fff4d6;border-bottom:3px solid #d98b00;color:#6b4200;font:15px/1.7 \'Microsoft YaHei\',sans-serif"><b>这个页面不能直接双击打开。</b> 请回到上一级文件夹双击 <b>启动.bat</b>，再访问 http://localhost:3000 。</div>');}</script>
+
+<svg class="svg-sprite" aria-hidden="true">
+  <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+    <rect x="7" y="7" width="10" height="10" rx="1"/>
+    <path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>
+  </symbol>
+  <symbol id="i-pins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+    <rect x="8" y="5" width="8" height="14" rx="1"/>
+    <path d="M8 8H4M8 12H4M8 16H4M16 8h4M16 12h4M16 16h4"/>
+  </symbol>
+</svg>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <img src="assets/emblem.png" alt="院徽" width="26" height="26">
+    </div>
+    <div class="brand-text">
+      <b>实验台</b>
+      <span>Click to Learn</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="bar-lamps" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="b"></i></span>
+    <span class="bar-acts">
+      <a class="ibtn" href="./" data-tip="返回封面" aria-label="返回封面">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6V19a1 1 0 0 1-1 1h-4.2v-5H9.2v5H5a1 1 0 0 1-1-1z"/></svg>
+      </a>
+      <button class="ibtn" type="button" data-act="theme" data-tip="切换为暗色主题" aria-label="切换主题">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/></svg>
+      </button>
+    </span>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- ================= 学习进度 ================= -->
+  <div class="lab-progress">
+    <span class="who">学习进度</span>
+    <span class="track">
+      <span class="seg" data-seg="pin">01 认引脚</span>
+      <span class="seg" data-seg="core">02 看片内</span>
+      <span class="seg" data-seg="wire">03 连线台</span>
+    </span>
+    <button type="button" class="go" id="labGo" aria-live="polite">还剩 3 段没练</button>
+  </div>
+
+  <!-- ================= 实验台 ================= -->
+  <div class="sec-head" style="margin-top:6px">
+    <span class="idx">LAB</span>
+    <h2>动手看这块板</h2>
+    <span class="hint">每段先动手，再点按钮做练习，答完弹这一段的小结</span>
+  </div>
+
+  <div class="lab" id="lab" data-active="pin">
+    <div class="lab-tabs">
+      <button class="lab-tab on" data-tab="pin"><span class="tn">01</span>引脚图</button>
+      <button class="lab-tab" data-tab="core"><span class="tn">02</span>片内结构</button>
+      <button class="lab-tab" data-tab="wire"><span class="tn">03</span>连线台</button>
+      <div class="lab-tip mono">CLICK · TAP · DRAG</div>
+    </div>
+
+    <!-- ---------- 引脚图 ---------- -->
+    <div class="lab-panel" data-panel="pin">
+      <div class="lab-grid">
+        <div class="lab-stage pin-stage">
+          <svg id="pinSvg" viewBox="0 0 560 600" role="img" aria-label="80C51 DIP-40 引脚按功能分四类">
+            <defs>
+              <radialGradient id="pinSpot" cx="50%" cy="46%" r="54%">
+                <stop offset="0%" class="spot-a"/>
+                <stop offset="100%" class="spot-b"/>
+              </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="560" height="600" fill="url(#pinSpot)"/>
+            <rect x="150" y="70" width="260" height="460" rx="4" class="body"/>
+            <path d="M268 70a12 12 0 0 0 24 0" class="body-notch"/>
+            <text x="280" y="286" text-anchor="middle" class="body-name">80C51</text>
+            <text x="280" y="308" text-anchor="middle" class="body-sub">DIP-40 · 40 PIN</text>
+            <text x="280" y="326" text-anchor="middle" class="body-sub">2 + 3 + 32 + 3</text>
+            <text x="280" y="352" text-anchor="middle" class="body-hint" id="bodyHint">点芯片 · 40 根全亮</text>
+            <g id="chipHit" class="chip-hit"><rect x="150" y="70" width="260" height="460" rx="4"/></g>
+            <g id="gPins"></g>
+            <text x="280" y="566" text-anchor="middle" class="foot-note">缺口朝上，左上角为第 1 脚，逆时针编号</text>
+          </svg>
+        </div>
+        <aside class="lab-side">
+          <div class="cat-head mono">PIN MAP · 按功能分四类</div>
+          <div class="cat-list" id="catList">
+            <button type="button" class="cat" data-cat="pwr">
+              <span class="cm"><b>电源线</b><em>VCC · VSS</em></span>
+              <span class="cc">2 根</span>
+            </button>
+            <button type="button" class="cat" data-cat="run">
+              <span class="cm"><b>运行必备引脚</b><em>XTAL1 · XTAL2 · RST</em></span>
+              <span class="cc">3 根</span>
+            </button>
+            <button type="button" class="cat" data-cat="io">
+              <span class="cm"><b>应用 I/O 口</b><em>P0—P3 四个并行口</em></span>
+              <span class="cc">32 根</span>
+            </button>
+            <button type="button" class="cat sub" data-cat="p3">
+              <span class="cm"><b>P3 口第二功能</b><em>RXD · TXD · INT · T0/T1 · WR/RD</em></span>
+              <span class="cc">8 根</span>
+            </button>
+            <button type="button" class="cat" data-cat="ext">
+              <span class="cm"><b>并行扩展必备引脚</b><em>/EA · /PSEN · ALE</em></span>
+              <span class="cc">3 根</span>
+            </button>
+          </div>
+          <div class="pin-info" id="pinInfo">
+            <div class="pi-empty">
+              <svg class="ico"><use href="#i-pins"/></svg>
+              <p>点左边一类，这一类的引脚亮起来，其余退到背景；点其中一只，看它的功能。</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="lq" data-quiz="pin"></div>
+    </div>
+
+    <!-- ---------- 片内结构 ---------- -->
+    <div class="lab-panel" data-panel="core" hidden>
+      <div class="lab-grid core-grid">
+        <div class="lab-stage core-stage" id="coreStage">
+          <svg id="coreSvg" viewBox="0 0 860 566" role="img" aria-label="80C51 片内结构：八个部件与三条总线">
+            <defs>
+              <marker id="ar-db" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="#54a6dd"/>
+              </marker>
+              <marker id="ar-ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="#e05a4d"/>
+              </marker>
+              <marker id="ar-cb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="#e2b24c"/>
+              </marker>
+            </defs>
+            <g id="gBars"></g>
+            <g id="gConns"></g>
+            <g id="gBlocks"></g>
+            <g id="gFlow">
+              <line id="trail" class="trail" x1="0" y1="0" x2="0" y2="0"/>
+              <g id="pkt" class="pkt"><rect rx="9"/><text text-anchor="middle"></text></g>
+            </g>
+          </svg>
+          <div class="flow-bar" id="flowBar">
+            <span class="fb-k" id="flowK">总线</span>
+            <span class="fb-t" id="flowT">点方块看它管什么；点三条总线，看数据在部件之间怎么走。</span>
+            <button class="fb-replay" id="flowReplay" type="button" hidden>重播</button>
+          </div>
+        </div>
+        <aside class="lab-side">
+          <div class="pin-info" id="coreInfo">
+            <div class="pi-empty">
+              <svg class="ico"><use href="#i-chip"/></svg>
+              <p>片内不是一整块黑塑料，是一套完整的计算机。点方块看它管什么，点总线看数据怎么走。</p>
+            </div>
+          </div>
+          <div class="legend">
+            <div><i class="sw db"></i>DB 数据总线 · 8 位双向</div>
+            <div><i class="sw ab"></i>AB 地址总线 · 16 位单向</div>
+            <div><i class="sw cb"></i>CB 控制总线 · 读写与中断</div>
+            <div class="lg-tip">箭头指向方块＝信号送入；箭头指向总线＝信号送出。</div>
+          </div>
+        </aside>
+      </div>
+      <div class="lq" data-quiz="core"></div>
+    </div>
+
+    <!-- ---------- 连线台 ---------- -->
+    <div class="lab-panel" data-panel="wire" hidden>
+      <div class="lab-grid wide">
+        <div class="lab-stage wire-stage" id="wireStage">
+          <svg id="wireSvg" viewBox="0 0 800 620" role="img" aria-label="最小系统连线台：拖动元器件摆位，依次点两处端子接线">
+            <g id="gParts"></g>
+            <g id="gWires"></g>
+            <g id="gNodes"></g>
+          </svg>
+          <div class="wire-hint mono" id="wireHint">拖动摆位 · 点两处端子接线 · 同名电源与地互通</div>
+        </div>
+        <aside class="lab-side wire-side">
+          <div class="pinfo" id="partInfo" hidden>
+            <div class="pinfo-h">
+              <b id="pinfoRef">U1</b>
+              <span id="pinfoName">80C51</span>
+              <button type="button" class="pinfo-x" id="pinfoClose" aria-label="收起">×</button>
+            </div>
+            <div class="pinfo-spec mono" id="pinfoSpec"></div>
+            <div class="pinfo-rows" id="pinfoRows"></div>
+            <div class="pinfo-f" id="pinfoFoot" hidden>
+              <button type="button" class="btn ghost xs" id="pinfoDel">移走这一个</button>
+            </div>
+          </div>
+
+          <div class="wire-scroll">
+            <div class="wire-head">
+              <div>
+                <span class="lb mono">接线进度</span>
+                <b id="wireNum">0 / 18</b>
+              </div>
+              <div class="wire-barwrap"><div class="wire-bar" id="wireBar"></div></div>
+            </div>
+            <div class="stepcard" id="stepCard" hidden>
+              <div class="sc-top"><span class="sc-n">第 <b id="stepNo">1</b> / 18 步</span><span class="sc-g" id="stepGrp">最小运行电路</span></div>
+              <p class="sc-t" id="stepTip"></p>
+            </div>
+
+            <div class="wtray" data-tray="min">
+              <button type="button" class="wtray-h">
+                <span class="wt-n">01</span>
+                <span class="wt-t"><b>最小运行电路</b><em>晶振 ×1 · 电容 ×2 · 电源 ×2 · 地 ×2</em></span>
+                <span class="wt-c">0 / 7</span>
+              </button>
+              <div class="wtray-b" hidden></div>
+            </div>
+            <div class="wtray" data-tray="led">
+              <button type="button" class="wtray-h">
+                <span class="wt-n">02</span>
+                <span class="wt-t"><b>三色状态指示</b><em>三只灯 ×3 · 限流电阻 ×3 · 电源 ×1</em></span>
+                <span class="wt-c">0 / 7</span>
+              </button>
+              <div class="wtray-b" hidden></div>
+            </div>
+            <button type="button" class="wire-demo" id="wireDemo">看一遍自动演示</button>
+          </div>
+
+          <div class="wire-foot">
+            <div class="wire-status" id="wireStatus">单片机已经在图桌上了，先点上面两个框取元器件。</div>
+            <div class="wire-btns">
+              <button class="btn primary sm" id="wireStart" disabled>开始接线</button>
+              <button class="btn ghost sm" id="wireReset">清空接线</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="lq" data-quiz="wire"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 小结 / 课程思政 弹窗 -->
+<div class="sz-mask" id="szMask" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="szTitle">
+  <div class="sz-box" id="szBox" data-kind="summary">
+    <div class="sz-kicker" id="szKicker">项目总结</div>
+    <h3 id="szTitle"></h3>
+    <span class="sz-seal" id="szSeal">本段完成</span>
+    <div class="sz-body" id="szBody"></div>
+    <div class="sz-foot">
+      <span class="muted" id="szFrom"></span>
+      <span class="sz-acts">
+        <button class="btn ghost sm" id="szStay" type="button">留在本段</button>
+        <button class="btn primary sm" id="szNext" type="button">进入下一段</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<script src="lab.js?v=20261023j2"></script>
+<script src="lab-wire.js?v=20261023j2"></script>
+<script src="lab-quiz.js?v=20261023j2"></script>
+</body>
+</html>

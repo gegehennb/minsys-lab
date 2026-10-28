@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>结课 · 最小系统大师</title>
+<link rel="icon" href="assets/emblem.png">
+<link rel="stylesheet" href="style.css?v=20261023j2">
+<script>try{var t=localStorage.getItem('minsys_theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+<script src="ui.js?v=20261023j2" defer></script>
+</head>
+<body class="fn-body">
+<script>if(location.protocol==='file:'){document.write('<div style="margin:0;padding:16px 22px;background:#fff4d6;border-bottom:3px solid #d98b00;color:#6b4200;font:15px/1.7 \'Microsoft YaHei\',sans-serif"><b>这个页面不能直接双击打开。</b> 请回到上一级文件夹双击 <b>启动.bat</b>，再访问 http://localhost:3000 。</div>');}</script>
+
+<!-- 背景：网格漂移、呼吸光斑、微尘 -->
+<div class="fn-bg" aria-hidden="true">
+  <div class="fn-halo"></div>
+  <div class="fn-dust"><i></i><i></i><i></i></div>
+  <div class="fn-scan"></div>
+</div>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <img src="assets/emblem.png" alt="院徽" width="26" height="26">
+    </div>
+    <div class="brand-text">
+      <b>结课</b>
+      <span>Final Review</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="bar-lamps" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="b"></i></span>
+    <span class="bar-acts">
+      <a class="ibtn" href="./" data-tip="返回封面" aria-label="返回封面">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6V19a1 1 0 0 1-1 1h-4.2v-5H9.2v5H5a1 1 0 0 1-1-1z"/></svg>
+      </a>
+      <a class="ibtn" href="lab.html" data-tip="回到实验台" aria-label="回到实验台">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5 3.6 12 10 19M4 12h16.4"/></svg>
+      </a>
+      <button class="ibtn" type="button" data-act="theme" data-tip="切换为暗色主题" aria-label="切换主题">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/></svg>
+      </button>
+    </span>
+  </div>
+</div>
+
+<main class="fn-wrap">
+
+  <!-- ============ 开场 ============ -->
+  <section class="fn-hero">
+    <div class="fn-hero-txt">
+      <p class="fn-kicker"><span class="dot"></span>FINAL · 结课</p>
+      <h1>最小系统，跑起来了</h1>
+      <p class="fn-sub">80C51 · 12MHz · 三色状态指示</p>
+      <p class="fn-lead">
+        三段都过了。这一段不出新题，把走过的路收成一条链，
+        再看看它跟手上的活是什么关系。
+      </p>
+      <div class="fn-lamps" aria-hidden="true">
+        <i class="r"></i><i class="y"></i><i class="b"></i>
+        <span class="fn-lamp-cap">红 → 黄 → 蓝，各亮一秒</span>
+      </div>
+    </div>
+
+    <div class="fn-hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 720 200" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fnFade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#79b4e2" stop-opacity=".14"/>
+            <stop offset="100%" stop-color="#79b4e2" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path class="w-fill" d="M0 110H150L162 88L174 132L186 26L198 176L210 110H380L392 88L404 132L416 26L428 176L440 110H620L632 88L644 132L656 26L668 176L680 110H720V200H0Z"/>
+        <path class="w-trace" d="M0 110H150L162 88L174 132L186 26L198 176L210 110H380L392 88L404 132L416 26L428 176L440 110H620L632 88L644 132L656 26L668 176L680 110H720"/>
+        <path class="w-run" d="M0 110H150L162 88L174 132L186 26L198 176L210 110H380L392 88L404 132L416 26L428 176L440 110H620L632 88L644 132L656 26L668 176L680 110H720"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ 数字 ============ -->
+  <section class="fn-metrics" data-rev>
+    <div class="m"><b data-count="40">0</b><em>只引脚分四类</em></div>
+    <div class="m"><b data-count="8">0</b><em>个片内部件</em></div>
+    <div class="m"><b data-count="3">0</b><em>条总线</em></div>
+  </section>
+
+  <!-- ============ 一、三段收成 ============ -->
+  <section class="fn-sec">
+    <div class="fn-head" data-rev>
+      <span class="fh-no">01</span>
+      <h2>三段走下来，手里留下了什么</h2>
+    </div>
+
+    <div class="fn-cards">
+      <article class="fn-card ac-b" data-rev style="--d:.0s">
+        <span class="fc-no">01</span>
+        <h3>认引脚</h3>
+        <p class="fc-lead">先找电源和时钟，再看口线怎么分</p>
+        <ul>
+          <li><span>VCC 与 VSS 供电，XTAL1、XTAL2 起振，RST 复位</span></li>
+          <li><span>P0—P3 四个并行口，是芯片对外的通道</span></li>
+        </ul>
+      </article>
+
+      <article class="fn-card ac-y" data-rev style="--d:.1s">
+        <span class="fc-no">02</span>
+        <h3>看片内</h3>
+        <p class="fc-lead">程序跑起来时，谁在干活</p>
+        <ul>
+          <li><span>ROM 存程序，RAM 存变量与堆栈</span></li>
+          <li><span>三条总线在部件之间递地址、数据与控制信号</span></li>
+        </ul>
+      </article>
+
+      <article class="fn-card ac-r" data-rev style="--d:.2s">
+        <span class="fc-no">03</span>
+        <h3>连线台</h3>
+        <p class="fc-lead">图纸上的线，板子上要真的通</p>
+        <ul>
+          <li><span>先电源与时钟，再走三路状态指示</span></li>
+          <li><span>接完逐条点检，才合闸上电</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ 二、一条链 ============ -->
+  <section class="fn-sec">
+    <div class="fn-head" data-rev>
+      <span class="fh-no">02</span>
+      <h2>灯为什么亮，一条链说清楚</h2>
+      <p>从石英片振动到灯亮，中间六道关，少一道灯就不亮。</p>
+    </div>
+
+    <ol class="fn-chain" data-rev>
+      <li style="--i:0"><span class="cd"></span><b>晶振起振</b><em>12MHz 石英片</em><i>一拍 1μs</i></li>
+      <li style="--i:1"><span class="cd"></span><b>时钟入片</b><em>XTAL1 · XTAL2</em><i>12 分频</i></li>
+      <li style="--i:2"><span class="cd"></span><b>CPU 取指</b><em>/EA 接高，从 0000H 走</em><i>逐条执行</i></li>
+      <li style="--i:3"><span class="cd"></span><b>口线写 0</b><em>LED_RED = 0</em><i>P2.0 拉低</i></li>
+      <li style="--i:4"><span class="cd"></span><b>限流导通</b><em>+5V 经 220Ω</em><i>约 14mA</i></li>
+      <li style="--i:5"><span class="cd"></span><b>灯亮</b><em>红色流向黄、蓝</em><i>每只 1s</i></li>
+    </ol>
+  </section>
+
+  <!-- ============ 三、课程思政 ============ -->
+  <section class="fn-sec fn-sz">
+    <div class="fn-head" data-rev>
+      <span class="fh-no">03</span>
+      <h2>大国工匠，是从一根线开始的</h2>
+    </div>
+
+    <div class="fn-sz-grid">
+      <p class="fn-sz-lead" data-rev>
+        总装线上没有「差不多」。一只电阻选错、一处端子虚接，灯亮出来的状态就是错的，
+        下游按错的状态往下走。手艺的分量，压在没人替你复查的那些细节上。
+      </p>
+
+      <ol class="fn-rules">
+        <li data-rev style="--d:.0s">
+          <b>精：毫安也要算清</b>
+          <span>220Ω 换一档，灯就亮得不对；线头少绕半圈，震动一来就是虚接。精度不是形容词，是拿毫安和毫米量出来的。</span>
+        </li>
+        <li data-rev style="--d:.12s">
+          <b>细：一条一条点检</b>
+          <span>上电之前照单对，一条一条过，不靠一句「应该没问题」。事故的起点，往往就是这句话。</span>
+        </li>
+        <li data-rev style="--d:.24s">
+          <b>恒：重复到不出错</b>
+          <span>第一次接对算运气，第一百次接对才是手艺。站得住总装线的师傅，都是把同一件事做到不出错的人。</span>
+        </li>
+      </ol>
+
+      <blockquote class="fn-quote" data-rev>
+        <span class="fn-quote-t">把简单的事做到不出错，就是工匠。</span>
+        <span class="fn-quote-l" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="b"></i></span>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ============ 四、下一步 ============ -->
+  <section class="fn-sec fn-next">
+    <div class="fn-head" data-rev>
+      <span class="fh-no">04</span>
+      <h2>下面交给仿真</h2>
+      <p>实验台上接的是理想电路。进到软件里，改一个参数，节拍就跟着变。</p>
+    </div>
+
+    <div class="fn-steps">
+      <div class="ns" data-rev style="--d:.0s">
+        <i>1</i><b>Keil 建工程</b>
+        <span>新建工程，器件选 AT89C51，把 test4.c 加进工程。</span>
+      </div>
+      <div class="ns" data-rev style="--d:.1s">
+        <i>2</i><b>编译出 .hex</b>
+        <span>0 error、0 warning，生成可烧录的十六进制文件。</span>
+      </div>
+      <div class="ns" data-rev style="--d:.2s">
+        <i>3</i><b>Proteus 载入</b>
+        <span>画最小系统，双击芯片指定 .hex，晶振设 12MHz。</span>
+      </div>
+      <div class="ns" data-rev style="--d:.3s">
+        <i>4</i><b>运行看节拍</b>
+        <span>三只灯轮流亮一秒；把 DelayMS 的参数改掉，节拍跟着变。</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="fn-foot">
+    <span>三峡旅游职业技术学院 · 航空工程学院</span>
+    <span>单片机原理及应用 · 80C51 最小系统与三色状态指示</span>
+  </footer>
+</main>
+
+<script src="finale.js?v=20261023j2"></script>
+</body>
+</html>

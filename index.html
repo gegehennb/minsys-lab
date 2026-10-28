@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>脉动哨兵 · 最小系统大师</title>
+<link rel="icon" href="assets/emblem.png">
+<link rel="stylesheet" href="style.css?v=20261023j2">
+<script>try{var t=localStorage.getItem('minsys_theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+<script src="ui.js?v=20261023j2" defer></script>
+</head>
+<body class="cover-body">
+<script>if(location.protocol==='file:'){document.write('<div style="margin:0;padding:16px 22px;background:#fff4d6;border-bottom:3px solid #d98b00;color:#6b4200;font:15px/1.7 \'Microsoft YaHei\',sans-serif"><b>这个页面不能直接双击打开。</b> 本平台需要后端服务：请回到上一级文件夹，双击 <b>启动.bat</b>，浏览器会自动打开 http://localhost:3000 。</div>');}</script>
+
+<div class="cover">
+
+  <div class="cv-bg" aria-hidden="true">
+    <div class="cv-dust"><i></i><i></i></div>
+    <div class="cv-scan"></div>
+    <div class="cv-wave">
+      <svg viewBox="0 0 1440 260" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="waveFade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#79b4e2" stop-opacity=".16"/>
+            <stop offset="100%" stop-color="#79b4e2" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path class="wave-fill" d="M0 150H462L476 122L490 182L504 44L518 226L532 150H906L920 122L934 182L948 44L962 226L976 150H1440V260H0Z"/>
+        <path class="wave-trace" d="M0 150H462L476 122L490 182L504 44L518 226L532 150H906L920 122L934 182L948 44L962 226L976 150H1440"/>
+        <path class="wave-run" d="M0 150H462L476 122L490 182L504 44L518 226L532 150H906L920 122L934 182L948 44L962 226L976 150H1440"/>
+      </svg>
+    </div>
+  </div>
+
+  <header class="cover-bar">
+    <span class="cb-left">
+      <img class="cb-mark" src="assets/emblem.png" alt="三峡旅游职业技术学院院徽">
+      <span class="cb-name">三峡旅游职业技术学院 · 航空工程学院</span>
+    </span>
+    <span class="cb-right">
+      <span class="cb-course">单片机原理及应用 · 实训公开课</span>
+      <span class="bar-acts">
+        <button class="ibtn" type="button" data-act="theme" data-tip="切换为暗色主题" aria-label="切换主题">
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/></svg>
+        </button>
+      </span>
+    </span>
+  </header>
+
+  <main class="cover-main">
+
+    <h1>脉动哨兵</h1>
+
+    <p class="cv-sub">80C51 最小系统 · 工位三色状态指示</p>
+
+    <p class="cv-sep">航空发动机总装 · 单元实训</p>
+
+    <p class="cv-task">
+      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15.2 3.5a4.8 4.8 0 0 0-6 6L3.8 14.9a1.6 1.6 0 0 0 0 2.3l3 3a1.6 1.6 0 0 0 2.3 0l5.4-5.4a4.8 4.8 0 0 0 6-6l-2.9 2.9-2.6-.6-.6-2.6z"/>
+      </svg>
+      <span>搭起最小系统，让三只灯按灯语亮起来</span>
+    </p>
+
+    <div class="cv-card">
+      <div class="cv-row cv-row-case">
+        <svg class="cv-ico r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.2"/>
+          <circle cx="12" cy="12" r="3.4"/>
+          <path d="M12 1.4v3.2M12 19.4v3.2M1.4 12h3.2M19.4 12h3.2" stroke-linecap="round"/>
+        </svg>
+        <div class="cv-case">
+          <div class="cv-case-txt">
+            <p class="cv-txt"><b>项目背景</b><span class="dash">—</span>某型航空发动机脉动总装线技改：工位状态由人工挂牌改为<span class="nw">灯组自动报读</span>。</p>
+            <p class="cv-txt"><b>委托任务</b><span class="dash">—</span>厂方下达第 03 工位：交付三色状态面板，<span class="lg lg-b">蓝灯放行</span>、<span class="lg lg-y">黄灯等待</span>、<span class="lg lg-r">红灯报警</span>。</p>
+            <p class="cv-txt"><b>本次交付</b><span class="dash">—</span>用一颗 <span class="nw">80C51</span> 搭最小系统，三路灯各占一根口线，上电即按<span class="nw">灯语</span>报读。</p>
+          </div>
+          <div class="cv-scene" aria-hidden="true">
+            <div class="cv-stack">
+              <div class="cv-lamps-v">
+                <span class="cv-lp cv-lp-r"></span>
+                <span class="cv-lp cv-lp-y"></span>
+                <span class="cv-lp cv-lp-b"></span>
+              </div>
+              <span class="cv-pole"></span>
+              <span class="cv-base"></span>
+            </div>
+            <div class="cv-lw">
+              <span class="cv-lw-i cv-lw-b">放行</span>
+              <span class="cv-lw-i cv-lw-y">等待</span>
+              <span class="cv-lw-i cv-lw-r">报警</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cv-row">
+        <svg class="cv-ico b" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="3.5" width="16" height="17" rx="2"/>
+          <path d="M8 9h8M8 12.5h8M8 16h5"/>
+        </svg>
+        <p class="cv-txt"><b>实训任务</b><span class="dash">—</span>认四类引脚，看清片内八个部件，在连线台上把晶振、复位、电源和三路灯组接成<span class="nw">最小系统</span>，写一段<span class="nw">程序</span>让<span class="nw">三只灯</span>按节拍轮转。</p>
+      </div>
+    </div>
+
+    <div class="cv-flow">
+      <span class="cv-flow-cap">课内三段</span>
+      <span class="fi"><i>01</i>认引脚</span>
+      <span class="fs"></span>
+      <span class="fi"><i>02</i>看片内</span>
+      <span class="fs"></span>
+      <span class="fi"><i>03</i>连线台</span>
+      <span class="cv-lamps" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="b"></i></span>
+    </div>
+
+    <div class="cv-cta">
+      <a class="cv-enter" href="lab.html">进入实验台<i>→</i></a>
+      <span class="cv-note">每段一组练习 · 答完看小结 · 三段走完进结课页</span>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
