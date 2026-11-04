@@ -1121,6 +1121,120 @@ body.cover-body {
 .core-stage { display: flex; flex-direction: column; gap: 10px; }
 #coreSvg { display: block; width: 100%; height: auto; max-height: 540px; }
 
+/* ---------- 开场：芯片 → 片内结构 ---------- */
+/* 与片内方块同一套视觉语言：深底、细描边、等宽小字，只是面积更大、层级更高 */
+.intro-chip { cursor: pointer; }
+.intro-body {
+  fill: #102636; stroke: rgba(var(--c-line), .5); stroke-width: 1.4;
+  transition: fill .2s ease, stroke .2s ease, stroke-width .2s ease;
+}
+.intro-frame {
+  fill: none; stroke: rgba(var(--c-line), .16); stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+.intro-name {
+  font-family: var(--serif); font-size: 44px; fill: var(--ink); letter-spacing: 5px; font-weight: 600;
+}
+.intro-sub {
+  font-family: var(--mono); font-size: 10.5px; fill: var(--ink3); letter-spacing: 3.2px;
+}
+.intro-meta {
+  font-family: var(--mono); font-size: 9.6px; fill: rgba(var(--c-line), .5); letter-spacing: 1.6px;
+}
+.intro-rule { stroke: rgba(var(--c-line), .22); stroke-width: 1; }
+.intro-pin {
+  fill: rgba(var(--c-line), .34); stroke: none;
+  transition: fill .2s ease;
+}
+.intro-corner { fill: none; stroke: rgba(var(--c-line), .55); stroke-width: 1.6; }
+.intro-hit { fill: transparent; }
+.intro-tip { pointer-events: none; }
+.intro-tip-bg {
+  fill: rgba(var(--c-glow), .1); stroke: rgba(var(--c-glow), .38); stroke-width: 1.1;
+  animation: tipBreathe 2.6s ease-in-out infinite;
+  transition: stroke .2s ease, fill .2s ease;
+}
+.intro-tip-t {
+  font-family: var(--mono); font-size: 11px; fill: #8ccbf2; letter-spacing: 1.2px;
+}
+@keyframes tipBreathe {
+  0%, 100% { stroke-opacity: .4; fill-opacity: .5; }
+  50%      { stroke-opacity: 1;  fill-opacity: 1; }
+}
+@keyframes introHintPulse {
+  0%, 100% { opacity: .55; }
+  50%      { opacity: 1; }
+}
+.core-stage:has(.intro-chip:hover) .intro-body {
+  stroke: rgba(var(--c-glow), .85); stroke-width: 1.8; fill: #122e41;
+}
+.core-stage:has(.intro-chip:hover) .intro-name { fill: #8ccbf2; }
+.core-stage:has(.intro-chip:hover) .intro-pin { fill: rgba(var(--c-glow), .6); }
+.core-stage:has(.intro-chip:hover) .intro-corner { stroke: #8ccbf2; }
+.core-stage:has(.intro-chip:hover) .intro-rule { stroke: rgba(var(--c-glow), .4); }
+.core-stage:has(.intro-chip:hover) .intro-tip-bg { stroke: #8ccbf2; fill: rgba(var(--c-glow), .18); }
+.core-stage:has(.intro-chip:hover) .intro-tip-t { fill: #a9dcff; }
+.intro-chip:focus { outline: none; }
+.intro-chip:focus-visible .intro-body { stroke: #8ccbf2; stroke-width: 2.2; }
+
+/* 浅色主题下同步换肤，别在浅底上留一块深色 */
+html[data-theme="light"] .intro-body { fill: #fff; stroke: rgba(22, 21, 15, .26); }
+html[data-theme="light"] .intro-frame { stroke: rgba(22, 21, 15, .14); }
+html[data-theme="light"] .intro-name { fill: #16202c; }
+html[data-theme="light"] .intro-sub { fill: #7b8794; }
+html[data-theme="light"] .intro-meta { fill: rgba(22, 21, 15, .3); }
+html[data-theme="light"] .intro-rule { stroke: rgba(22, 21, 15, .16); }
+html[data-theme="light"] .intro-pin { fill: rgba(22, 21, 15, .22); }
+html[data-theme="light"] .intro-corner { stroke: rgba(22, 21, 15, .34); }
+html[data-theme="light"] .intro-tip-bg { fill: rgba(47, 111, 159, .07); stroke: rgba(47, 111, 159, .34); }
+html[data-theme="light"] .intro-tip-t { fill: #2f6f9f; }
+html[data-theme="light"] .core-stage:has(.intro-chip:hover) .intro-body { fill: #f6fafd; stroke: #2f6f9f; }
+html[data-theme="light"] .core-stage:has(.intro-chip:hover) .intro-name { fill: #2f6f9f; }
+html[data-theme="light"] .core-stage:has(.intro-chip:hover) .intro-pin { fill: rgba(47, 111, 159, .45); }
+html[data-theme="light"] .core-stage:has(.intro-chip:hover) .intro-corner { stroke: #2f6f9f; }
+
+/* 生长：总线、方块、接入线、对外标注都从透明淡起 */
+.bus.grow .bus-line { animation: growBar .3s cubic-bezier(.2,.7,.3,1) both; }
+.bus.grow .bus-code { animation: growFade .32s ease both; }
+@keyframes growBar {
+  from { opacity: 0; stroke-dasharray: 2 600; stroke-dashoffset: 0; }
+  60%  { opacity: 1; }
+  to   { opacity: .6; }
+}
+@keyframes growFade { from { opacity: 0; } to { opacity: .72; } }
+
+/* 只有 .blk.grow 这一个节点做淡入：父节点透明度会串给子节点，
+   子节点再各自做一遍动画就白闪了，所以这里不写子选择器 */
+.blk.grow {
+  animation: growBlk .34s cubic-bezier(.2,.9,.3,1.15) both;
+}
+.blk.grow rect { transform-origin: center; }
+@keyframes growBlk {
+  from { opacity: 0; }
+  55%  { opacity: 1; }
+  to   { opacity: 1; }
+}
+.conn.grow .conn-line, .conn.grow .conn-halo {
+  animation: growConn .26s ease both;
+  transform-box: fill-box; transform-origin: center;
+}
+@keyframes growConn {
+  from { opacity: 0; }
+  to   { opacity: .78; }
+}
+.conn.grow .conn-halo { animation-name: growConnHalo; }
+@keyframes growConnHalo { from { opacity: 0; } to { opacity: 1; } }
+
+.ext-lb.grow-now, .ext-arw.grow-now, .int-arw.grow-now {
+  animation: growFadeSoft .34s ease both;
+}
+@keyframes growFadeSoft {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+.core-stage.growing .blk { pointer-events: none; }
+.core-stage.growing .bus { pointer-events: none; }
+
 /* 三条总线 */
 .bus { cursor: pointer; }
 .bus[data-k="db"] { --bc: #54a6dd; }
@@ -1131,7 +1245,7 @@ body.cover-body {
   stroke: var(--bc); stroke-width: 2.6; stroke-dasharray: 9 7; opacity: .6;
   transition: opacity .25s ease, stroke-width .16s ease;
 }
-.bus-code { font-family: var(--mono); font-size: 11.5px; fill: var(--bc); opacity: .72; letter-spacing: 1px; }
+.bus-code { font-family: var(--mono); font-size: 20px; font-weight: 600; fill: var(--bc); opacity: .9; letter-spacing: 2px; }
 .bus:hover .bus-line { stroke-width: 4; opacity: 1; }
 .bus.on .bus-line {
   stroke-width: 4.2; opacity: 1;
@@ -3040,4 +3154,77 @@ html[data-theme="light"] .fn-chain.in .cd {
   }
   .cv-lw-b { opacity: 1 !important; transform: none !important; }
   [data-rev] { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---------- 连线台：手填参数 ---------- */
+.pinfo-val {
+  display: flex; align-items: center; gap: 10px;
+  margin: 10px 0 2px; padding: 9px 12px;
+  border: 1px solid var(--rule2); background: var(--w-02);
+}
+.pinfo-val label { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 1px; }
+.pinfo-val .pv-box { display: flex; align-items: baseline; gap: 4px; margin-left: auto; }
+.pinfo-val input {
+  width: 68px; padding: 3px 6px; text-align: right;
+  font-family: var(--mono); font-size: 14px; color: var(--ink);
+  background: var(--sunk); border: 1px solid var(--rule2); outline: none;
+}
+.pinfo-val input:focus { border-color: var(--steel2); }
+.pinfo-val input::placeholder { color: var(--ink3); opacity: .6; }
+.pinfo-val .pv-unit { font-family: var(--mono); font-size: 11.5px; color: var(--ink3); }
+
+/* 托盘取齐的提示 */
+.wtray-full {
+  margin-top: 8px; padding: 7px 10px; font-size: 11.5px; color: #6fd8a8;
+  border: 1px dashed rgba(111, 216, 168, .4); background: rgba(111, 216, 168, .07);
+}
+.wtray-full[hidden] { display: none; }
+
+/* ---------- 托盘卡片预览态 ---------- */
+.pcard.sel { border-color: var(--steel2); background: var(--w-04); }
+.pinfo.kind-preview .pinfo-h { border-bottom-color: var(--steel2); }
+.pinfo.kind-preview #pinfoName::after {
+  content: ' · 待放'; font-family: var(--mono); font-size: 10px;
+  color: var(--ink3); letter-spacing: 1px; margin-left: 6px;
+}
+.pv-done { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: .5px; }
+
+/* 单片机缺口 */
+.chip-notch { fill: none; stroke: #9fb3c2; stroke-width: 1.6; }
+html[data-theme="light"] .chip-notch { stroke: #5c5747; }
+
+/* 精简单片机的副标题 */
+.chip-sub2 { font-size: 11px; fill: rgba(var(--c-line), .38); letter-spacing: 2.4px; }
+html[data-theme="light"] .chip-sub2 { fill: #8a8272; }
+
+/* DIP-40 引脚：普通脚淡，本板用到的脚高亮 */
+.chip-leg { stroke: #4a5f70; stroke-width: 1.3; }
+.chip-leg.on { stroke: #9fb3c2; stroke-width: 2.2; }
+.chip-no.on { fill: #cfe4f2; font-weight: 600; }
+.chip-pin.on { fill: var(--ink); font-weight: 600; }
+.chip-grp2 { font-family: var(--mono); font-size: 9px; fill: rgba(var(--c-line), .32); letter-spacing: 1.6px; }
+html[data-theme="light"] .chip-leg { stroke: #b8b2a4; }
+html[data-theme="light"] .chip-leg.on { stroke: #3d6b8a; }
+html[data-theme="light"] .chip-no.on { fill: #234458; }
+html[data-theme="light"] .chip-grp2 { fill: #a09a8c; }
+
+/* 清除记录按钮：第一次点击进入待确认态 */
+.ibtn.armed {
+  color: #e05a4d; border-color: rgba(224, 90, 77, .55);
+  background: rgba(224, 90, 77, .12);
+  animation: wipePulse .9s ease-in-out infinite;
+}
+@keyframes wipePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224, 90, 77, .3); }
+  50% { box-shadow: 0 0 0 6px rgba(224, 90, 77, 0); }
+}
+
+/* 任务没完成却点「完成练习」：提示文字抖一下 */
+.ct-hint.nudge { animation: hintNudge .5s ease; color: var(--sig-r) !important; }
+@keyframes hintNudge {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
 }

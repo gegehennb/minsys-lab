@@ -124,13 +124,13 @@
   }
 
   function drawLED(g, d) {
-    ln(g, -30, 0, -12, 0);
-    el('path', { d: 'M12 -11 L12 11 L-12 0 Z', 'class': 'led-tri' }, g);
-    ln(g, -12, -11, -12, 11, 'plate');
-    ln(g, 12, 0, 30, 0);
-    el('circle', { cx: 0, cy: 0, r: 13, 'class': 'led-glow' }, g);
-    el('path', { d: 'M5 -16 L12 -23 M10 -14 L17 -21', 'class': 'led-ray' }, g);
-    tx(g, 0, 30, d.ref + ' ' + d.value, 'part-sub', 'middle');
+    ln(g, -26, 0, -10, 0);
+    el('path', { d: 'M10 -9 L10 9 L-10 0 Z', 'class': 'led-tri' }, g);
+    ln(g, -10, -9, -10, 9, 'plate');
+    ln(g, 10, 0, 26, 0);
+    el('circle', { cx: 0, cy: 0, r: 11, 'class': 'led-glow' }, g);
+    el('path', { d: 'M4 -13 L10 -19 M8 -11 L14 -17', 'class': 'led-ray' }, g);
+    tx(g, 0, 26, d.ref + ' ' + d.value, 'part-sub', 'middle');
   }
 
   function drawVcc(g) {
@@ -145,6 +145,35 @@
     ln(g, -8, 15, 8, 15, 'plate');
     ln(g, -3.5, 21, 3.5, 21, 'plate');
     tx(g, 0, 36, 'GND', 'part-sub', 'middle');
+  }
+
+  /* ================= 可手填的参数 =================
+     晶振、电容、电阻的取值由学生自己填，只填数字，不带单位。
+     内容存在 VAL 里，按实例 key 区分；没填时用占位提示。
+     -------------------------------------------------- */
+  var VAL = {};
+  var VAL_SPEC = {
+    X1:   { label: '频率', unit: 'MHz', ph: '?' },
+    CAP:  { label: '容值', unit: 'pF', ph: '?' },
+    RES:  { label: '阻值', unit: 'Ω', ph: '?' }
+  };
+  function valOf(type) {
+    var v = VAL[type];
+    return v === undefined || v === '' ? '' : v;
+  }
+  function valKind(type) {
+    var k = KEY2KIND[type];
+    if (k === 'X1') return 'X1';
+    if (k === 'CAP') return 'CAP';
+    if (k === 'RES') return 'RES';
+    return null;
+  }
+  function valText(type) {
+    var k = valKind(type);
+    if (!k) return null;
+    var v = valOf(type);
+    var sp = VAL_SPEC[k];
+    return v ? v + sp.unit : '?';
   }
 
   /* ================= 元器件表 ================= */
@@ -176,45 +205,45 @@
       ]
     },
     X1: {
-      ref: 'X1', name: '晶振', cat: 'min', draw: drawX1, value: '12MHz',
+      ref: 'X1', name: '晶振', cat: 'min', draw: drawX1,
       hit: [-14, -20, 28, 40],
-      spec: '12MHz 石英晶体',
+      spec: '石英晶体谐振器 · 竖放',
       info: [
-        ['型号', '12MHz 石英晶体谐振器'],
+        ['类型', '石英晶体谐振器'],
         ['作用', '与片内振荡电路一起产生时钟'],
-        ['频率', '12MHz，一个机器周期 1μs'],
+        ['取值', '由你按需要的机器周期自己定'],
         ['接法', '两端分别接 XTAL1、XTAL2']
       ],
-      note: '晶振跑不起来，CPU 就没有节拍，程序和引脚全都无从谈起。',
+      note: '晶振跑不起来，CPU 就没有节拍。频率填多少，一个机器周期就是它的 12 倍倒数。',
       terms: [
         { id: '1', x: 0, y: -30, dir: 'u', label: '上端' },
         { id: '2', x: 0, y: 30, dir: 'd', label: '下端' }
       ]
     },
     C1: {
-      ref: 'C1', name: '负载电容', cat: 'min', draw: drawCap, value: '22pF',
+      ref: 'C1', name: '负载电容', cat: 'min', draw: drawCap,
       hit: [-30, -18, 60, 36],
-      spec: '22pF 瓷片电容 · 横放',
+      spec: '瓷片电容 · 横放',
       info: [
-        ['容值', '22pF'],
         ['类型', '瓷片电容，无极性'],
         ['作用', '与晶振组成振荡回路，稳定起振'],
+        ['取值', '由你按晶振手册自己填'],
         ['接法', '右端并到 XTAL1，左端接地']
       ],
-      note: '取值按晶振手册给，一般 15—33pF。两只电容要一样大。',
+      note: '负载电容一般落在十几到三十几 pF 之间，两只电容要一样大。',
       terms: [
         { id: '1', x: -26, y: 0, dir: 'l', label: '左端' },
         { id: '2', x: 26, y: 0, dir: 'r', label: '右端' }
       ]
     },
     C2: {
-      ref: 'C2', name: '负载电容', cat: 'min', draw: drawCap, value: '22pF',
+      ref: 'C2', name: '负载电容', cat: 'min', draw: drawCap,
       hit: [-30, -18, 60, 36],
-      spec: '22pF 瓷片电容 · 横放',
+      spec: '瓷片电容 · 横放',
       info: [
-        ['容值', '22pF'],
         ['类型', '瓷片电容，无极性'],
         ['作用', '分担 XTAL2 一侧的负载'],
+        ['取值', '与 C1 取同一个数'],
         ['接法', '右端并到 XTAL2，左端接地']
       ],
       note: 'C1、C2 各管一端，缺一只也能起振，但频率会偏、起振变慢。',
@@ -317,21 +346,21 @@
         ['本板接法', '阴极接 P2.2，阳极经 R3 接 +5V（共阳）'],
         ['点亮条件', 'P2.2 输出低电平 0']
       ],
-      note: '蓝灯压降高，限流电阻仍取 220Ω，电流约 8mA，亮度略低于红黄。',
+      note: '蓝灯压降高，同样的阻值下电流最小，亮度会比红黄略低。',
       terms: [
         { id: 'K', x: -30, y: 0, dir: 'l', label: '阴极' },
         { id: 'A', x: 30, y: 0, dir: 'r', label: '阳极' }
       ]
     },
     R1: {
-      ref: 'R1', name: '限流电阻', cat: 'led', draw: drawRes, value: '220Ω',
+      ref: 'R1', name: '限流电阻', cat: 'led', draw: drawRes,
       hit: [-22, -14, 44, 28],
-      spec: '220Ω · 1/4W',
+      spec: '1/4W 金属膜电阻 · 横放',
       info: [
-        ['阻值', '220Ω'],
+        ['阻值', '由你按限流公式自己算'],
         ['功率', '1/4W 足够'],
         ['作用', '限制红灯支路电流在 14mA 左右'],
-        ['算法', '（5 − 2.0）V ÷ 220Ω ≈ 14mA']
+        ['算法', '（5 − 2.0）V ÷ 阻值 = 电流，控制在十几 mA']
       ],
       note: 'LED 不能直接接电源，串一只电阻才不会被烧穿。',
       terms: [
@@ -340,14 +369,14 @@
       ]
     },
     R2: {
-      ref: 'R2', name: '限流电阻', cat: 'led', draw: drawRes, value: '220Ω',
+      ref: 'R2', name: '限流电阻', cat: 'led', draw: drawRes,
       hit: [-22, -14, 44, 28],
-      spec: '220Ω · 1/4W',
+      spec: '1/4W 金属膜电阻 · 横放',
       info: [
-        ['阻值', '220Ω'],
+        ['阻值', '由你按限流公式自己算'],
         ['功率', '1/4W'],
         ['作用', '限制黄灯支路电流'],
-        ['算法', '（5 − 2.1）V ÷ 220Ω ≈ 13mA']
+        ['算法', '（5 − 2.1）V ÷ 阻值 = 电流，与红灯那条支路相近']
       ],
       note: '三只电阻取同一阻值，三条支路电流相近，亮度才一致。',
       terms: [
@@ -356,14 +385,14 @@
       ]
     },
     R3: {
-      ref: 'R3', name: '限流电阻', cat: 'led', draw: drawRes, value: '220Ω',
+      ref: 'R3', name: '限流电阻', cat: 'led', draw: drawRes,
       hit: [-22, -14, 44, 28],
-      spec: '220Ω · 1/4W',
+      spec: '1/4W 金属膜电阻 · 横放',
       info: [
-        ['阻值', '220Ω'],
+        ['阻值', '由你按限流公式自己算'],
         ['功率', '1/4W'],
         ['作用', '限制蓝灯支路电流'],
-        ['算法', '（5 − 3.2）V ÷ 220Ω ≈ 8mA']
+        ['算法', '（5 − 3.2）V ÷ 阻值 = 电流，蓝灯电流会小一些']
       ],
       note: '蓝灯电流最小，若嫌暗可单独把 R3 换成 150Ω。',
       terms: [
@@ -404,17 +433,21 @@
     VCCC: [776, 72]
   };
 
+
+
+
+
   /* 一种元器件一张卡片。need 是这一组要几只，点一次出一只，
      出够了还能接着点（多出来的最后会被数量校验挑出来）。 */
   var KINDS = [
-    { id: 'X1', tray: 'min', name: '晶振', sub: '12MHz · 石英晶体', need: 1, keys: ['X1'] },
-    { id: 'CAP', tray: 'min', name: '负载电容', sub: '22pF · 瓷片', need: 2, keys: ['C1', 'C2'], tag: 'C' },
+    { id: 'X1', tray: 'min', name: '晶振', sub: '石英晶体 · 参数待填', need: 1, keys: ['X1'] },
+    { id: 'CAP', tray: 'min', name: '负载电容', sub: '瓷片 · 参数待填', need: 2, keys: ['C1', 'C2'], tag: 'C' },
     { id: 'VCCM', tray: 'min', name: '电源符号', sub: '+5V · 两处互通', need: 2, keys: ['VCCA', 'VCCB'], tag: 'VCC' },
     { id: 'GND', tray: 'min', name: '接地符号', sub: '0V · 两处互通', need: 2, keys: ['GND1', 'GND2'], tag: 'GND' },
     { id: 'LEDR', tray: 'led', name: '红色指示灯', sub: 'φ5 · 2.0V', need: 1, keys: ['LEDR'] },
     { id: 'LEDY', tray: 'led', name: '黄色指示灯', sub: 'φ5 · 2.1V', need: 1, keys: ['LEDY'] },
     { id: 'LEDB', tray: 'led', name: '蓝色指示灯', sub: 'φ5 · 3.2V', need: 1, keys: ['LEDB'] },
-    { id: 'RES', tray: 'led', name: '限流电阻', sub: '220Ω · 1/4W', need: 3, keys: ['R1', 'R2', 'R3'], tag: 'R' },
+    { id: 'RES', tray: 'led', name: '限流电阻', sub: '1/4W · 参数待填', need: 3, keys: ['R1', 'R2', 'R3'], tag: 'R' },
     { id: 'VCCL', tray: 'led', name: '电源符号', sub: '+5V · 三路公共端', need: 1, keys: ['VCCC'], tag: 'VCC' }
   ];
 
@@ -444,21 +477,21 @@
   var STEPS = [
     { a: 'U1:XTAL1', b: 'X1:1', tip: '晶振的上端接到 19 脚 XTAL1', why: '时钟电路跨在 XTAL1、XTAL2 之间，先接一端。' },
     { a: 'U1:XTAL2', b: 'X1:2', tip: '晶振的下端接到 18 脚 XTAL2', why: '晶振两端各占一只引脚，不能短接在一起。' },
-    { a: 'U1:XTAL1', b: 'C1:2', tip: 'C1 的右端并到 XTAL1 上', why: '负载电容与晶振组成振荡回路，容值取 22pF。' },
+    { a: 'U1:XTAL1', b: 'C1:2', tip: 'C1 的右端并到 XTAL1 上', why: '负载电容与晶振组成振荡回路，容值按晶振手册给的那个数。' },
     { a: 'C1:1', b: 'GND1:V', tip: 'C1 的左端接地（两处地接哪一处都行）', why: '电容另一端必须回地，回路才闭合。图上两处地是同名符号，接哪一处都是同一个地网络。' },
     { a: 'U1:XTAL2', b: 'C2:2', tip: 'C2 的右端并到 XTAL2 上', why: '两只电容分担晶振两端的负载，取值要一样。' },
     { a: 'C2:1', b: 'GND1:V', tip: 'C2 的左端也回这处地', why: 'C1、C2 回的是同一个地，两处地符号等电位，接 GND1 或 GND2 都算接通。' },
     { a: 'U1:EA', b: 'VCCB:V', tip: '31 脚 /EA 接 +5V（三处电源符号互通）', why: '/EA 接高电平，CPU 才从片内 0000H 取指。' },
     { a: 'U1:VCC', b: 'VCCA:V', tip: '40 脚 VCC 接 +5V', why: '不给电，芯片内部一个部件也不动。' },
-    { a: 'U1:GND', b: 'GND2:V', tip: '20 脚就近接到芯片下方这处地', why: '地是电流的回流路径，缺了它什么也通不了。' },
+    { a: 'U1:GND', b: 'GND2:V', tip: '20 脚 GND 接到这处地', why: '地是电流的回流路径，缺了它什么也通不了。' },
     { a: 'U1:P20', b: 'LEDR:K', tip: 'P2.0 接红灯的阴极', why: '口线拉低，电流才从 +5V 经灯流进芯片，红灯亮。' },
-    { a: 'LEDR:A', b: 'R1:1', tip: '红灯的阳极串上限流电阻 R1', why: 'LED 不能直接接电源，220Ω 把电流限在 14mA。' },
+    { a: 'LEDR:A', b: 'R1:1', tip: '红灯的阳极串上限流电阻 R1', why: 'LED 不能直接接电源，串上电阻把电流限在十几 mA。' },
     { a: 'R1:2', b: 'VCCC:V', tip: 'R1 的另一端接 +5V', why: '共阳接法，三只灯的阳极都汇到 +5V。' },
     { a: 'U1:P21', b: 'LEDY:K', tip: 'P2.1 接黄灯的阴极', why: '每一路灯各占一根口线，互不干扰。' },
     { a: 'LEDY:A', b: 'R2:1', tip: '黄灯的阳极串上限流电阻 R2', why: '三只电阻同阻值，三条支路亮度才齐。' },
     { a: 'R2:2', b: 'VCCC:V', tip: 'R2 的另一端接 +5V', why: '黄灯支路与红灯支路在 +5V 处汇合。' },
     { a: 'U1:P22', b: 'LEDB:K', tip: 'P2.2 接蓝灯的阴极', why: 'P2 口八根线，本板只用了低三位。' },
-    { a: 'LEDB:A', b: 'R3:1', tip: '蓝灯的阳极串上限流电阻 R3', why: '蓝灯压降 3.2V，串 220Ω 后电流约 8mA。' },
+    { a: 'LEDB:A', b: 'R3:1', tip: '蓝灯的阳极串上限流电阻 R3', why: '蓝灯压降 3.2V，同样的阻值下电流最小。' },
     { a: 'R3:2', b: 'VCCC:V', tip: 'R3 的另一端接 +5V', why: '三路汇齐，指示电路就完整了。' }
   ];
 
@@ -666,18 +699,17 @@
       setStatus('板子已经接通，元器件不再增删。要改就点「清空接线」重来。', 'warn');
       return;
     }
+    /* 放够数量就封顶：需求几只就只出几只，多一只都不给 */
+    if (countKind(kind) >= kind.need) {
+      if (!quiet) setStatus('<b>' + kind.name + '</b> 已经放够 ' + kind.need + ' 只，不再多生成。', 'warn');
+      return;
+    }
     var key = null;
     for (var i = 0; i < kind.keys.length; i++) {
       if (!I[kind.keys[i]]) { key = kind.keys[i]; break; }
     }
-    if (!key) {
-      extraNo[kind.id] = (extraNo[kind.id] || 0) + 1;
-      key = (kind.tag || kind.id) + (kind.keys.length + extraNo[kind.id]);
-      while (I[key]) {
-        extraNo[kind.id]++;
-        key = (kind.tag || kind.id) + (kind.keys.length + extraNo[kind.id]);
-      }
-    }
+    if (!key) return;
+    if (I[key]) return;
     KEY2KIND[key] = kind.id;
     place(key, quiet, kind);
   }
@@ -719,14 +751,13 @@
     refreshTrays();
     updateProgress();
 
+    /* 放下时不弹参数卡，也不自动选中：要学这一只的脾性，自己到图上点它 */
     if (!quiet) {
-      select(type);
       var kd = KIND[KEY2KIND[type]];
       if (kd) {
         var got = countKind(kd);
-        setStatus('<b>' + def.ref + ' ' + def.name + '</b> 已放下（' + kd.name + ' ' + got + ' / ' +
-          kd.need + '）。' + (got < kd.need ? '这一种还要 ' + (kd.need - got) + ' 只。' :
-            got > kd.need ? '这一种已经多了 ' + (got - kd.need) + ' 只，最后校验会拦下来。' : ''), got > kd.need ? 'warn' : 'ok');
+        setStatus('<b>' + def.ref + '</b> 已放上（' + got + ' / ' + kd.need + '）' +
+          (got < kd.need ? '，再点一次卡片继续放。' : '，点图上的元件可以看它的参数。'), 'ok');
       }
     }
   }
@@ -750,6 +781,7 @@
     if (I[type].el.parentNode) I[type].el.parentNode.removeChild(I[type].el);
     var ref = I[type].def.ref;
     delete I[type];
+    delete VAL[type];
     buildTerms();
     refreshTrays();
     updateProgress();
@@ -769,8 +801,24 @@
     svg.classList.add('dragging');
   }
 
+  /* 参数卡里的手填输入框：只填数字，单位写在框后面 */
+  function valEditor(type) {
+    var k = valKind(type);
+    if (!k) return '';
+    var sp = VAL_SPEC[k];
+    var v = valOf(type);
+    return '<div class="pinfo-val">' +
+      '<label for="pvInput">' + sp.label + '</label>' +
+      '<span class="pv-box"><input id="pvInput" type="text" inputmode="decimal" ' +
+      'value="' + v + '" placeholder="' + sp.ph + '" maxlength="6" autocomplete="off">' +
+      '<i class="pv-unit">' + sp.unit + '</i></span>' +
+      '</div>';
+  }
+
   function select(type) {
+    curSel = type;
     Object.keys(I).forEach(function (k) { I[k].el.classList.toggle('sel', k === type); });
+    if (infoBox) infoBox.classList.remove('kind-preview');
     if (!type) { infoBox.hidden = true; return; }
     var d = PARTS[type];
     infoRef.textContent = d.ref;
@@ -778,11 +826,55 @@
     infoSpec.textContent = d.spec;
     infoRows.innerHTML = d.info.map(function (r) {
       return '<span><i>' + r[0] + '</i><b>' + r[1] + '</b></span>';
-    }).join('') + '<p class="pinfo-note">' + d.note + '</p>';
-    if (infoFoot) infoFoot.hidden = (type === 'U1');
+    }).join('') + valEditor(type) + '<p class="pinfo-note">' + d.note + '</p>';
+    /* 数量已经封顶，撤元件这条路不再需要，参数卡里不放「移走这一个」 */
+    if (infoFoot) {
+      infoFoot.hidden = true;
+      infoFoot.innerHTML = '<button type="button" class="btn ghost xs" id="pinfoDel">移走这一个</button>';
+    }
     infoBox.hidden = false;
     infoBox.setAttribute('data-part', type);
   }
+
+  /* 参数输入：只留数字和小数点，实时改到图上的器件上 */
+  if (infoBox) {
+    infoBox.addEventListener('input', function (e) {
+      var inp = e.target;
+      if (!inp || inp.id !== 'pvInput') return;
+      var type = infoBox.getAttribute('data-part');
+      var k = valKind(type);
+      if (!k) return;
+      var raw = inp.value.replace(/[^0-9.]/g, '');
+      var dot = raw.indexOf('.');
+      if (dot >= 0) raw = raw.slice(0, dot + 1) + raw.slice(dot + 1).replace(/\./g, '');
+      if (raw !== inp.value) inp.value = raw;
+      VAL[type] = raw;
+      redrawPart(type);
+      updateProgress();
+    });
+  }
+
+  function redrawPart(type) {
+    var inst = I[type];
+    if (!inst) return;
+    var g = inst.el;
+    /* 只清掉画出来的图形，留住命中框事件 */
+    while (g.firstChild) g.removeChild(g.firstChild);
+    /* 晶振、电容、电阻的副标题显示手填的数值（带单位）；没填就显示 ? */
+    var shown = inst.def;
+    if (valKind(type)) {
+      shown = {};
+      for (var kk in inst.def) if (inst.def.hasOwnProperty(kk)) shown[kk] = inst.def[kk];
+      shown.value = valText(type) || '?';
+    }
+    inst.def.draw(g, shown);
+    var h = inst.def.hit;
+    var hit = el('rect', { x: h[0], y: h[1], width: h[2], height: h[3], rx: 4, 'class': 'part-hit' }, g);
+    hit.addEventListener('pointerdown', function (e) { startDrag(e, type); });
+    if (inst.def.lamp) g.setAttribute('data-lamp', inst.def.lamp);
+    if (type === curSel) g.classList.add('sel');
+  }
+  var curSel = null;
 
   /* ================= 端子 ================= */
   function buildTerms() {
@@ -1060,7 +1152,8 @@
     setLamp(null);
   }
 
-  /* 程序写完才跑：红 1s → 黄 1s → 蓝 1s，照 test4.c 的节拍走两圈 */
+  /* 程序写完就跑：红 1s → 黄 1s → 蓝 1s，照 test4.c 的节拍。
+     一直循环到总结弹窗出现为止；弹出前会调 lampOff() 停下。 */
   function runProgram() {
     lampOff();
     runOn = true;
@@ -1070,11 +1163,6 @@
       if (!runOn) return;
       setLamp(seq[i % 3]);
       i++;
-      if (i >= 6) {
-        runOn = false;
-        lampTimer.push(setTimeout(function () { if (!runOn) setLamp(null); }, 900));
-        return;
-      }
       lampTimer.push(setTimeout(tick, 1000));
     }
     lampTimer.push(setTimeout(tick, 260));
@@ -1093,7 +1181,7 @@
           '<em>' + k.sub + '</em></span>' +
           '<span class="pd"><b>0</b>/' + k.need + '</span>' +
           '</button>';
-      }).join('') + '<button type="button" class="pcard all" data-all="' + cat + '">这一组按数量补齐</button>';
+      }).join('');
 
       box.querySelector('.wtray-h').addEventListener('click', function () {
         var open = !body.hidden;
@@ -1103,21 +1191,7 @@
       body.addEventListener('click', function (e) {
         var card = e.target.closest('.pcard');
         if (!card) return;
-        if (card.dataset.all) {
-          /* 补到需要的数量为止，不多放 */
-          var i = 0;
-          list.forEach(function (k) {
-            var lack = k.need - countKind(k);
-            for (var n = 0; n < lack; n++) {
-              setTimeout(function () { placeKind(k.id, true); }, i * 80);
-              i++;
-            }
-          });
-          setTimeout(function () {
-            setStatus('这一组按数量补齐了。位置不合适就拖动调整，也可以点元器件看参数。', 'ok');
-          }, i * 80 + 60);
-          return;
-        }
+        /* 点卡片直接放一只；放够了这张卡片自己会收起 */
         placeKind(card.dataset.kind);
       });
     });
@@ -1139,6 +1213,8 @@
         if (!card) return;
         card.classList.toggle('done', n === k.need);
         card.classList.toggle('over', n > k.need);
+        /* 取满就把这张卡片收起来，不留可再点的入口 */
+        card.hidden = n >= k.need;
         var pd = card.querySelector('.pd');
         if (pd) pd.innerHTML = '<b>' + n + '</b>/' + k.need;
       });
@@ -1146,6 +1222,15 @@
       if (c) c.textContent = got + ' / ' + need;
       box.classList.toggle('done', exact && got > 0);
       box.classList.toggle('bad', !exact && got > 0);
+      /* 这一组取齐了：框里给一行提示 */
+      var full = box.querySelector('.wtray-full');
+      if (!full) {
+        full = document.createElement('div');
+        full.className = 'wtray-full';
+        box.querySelector('.wtray-b').appendChild(full);
+      }
+      full.hidden = !exact;
+      full.textContent = '✔ 这一组已取齐，不用再点了';
     });
 
     var ok = gaps().length === 0;
@@ -1160,7 +1245,19 @@
   var CATNO = { min: '01', led: '02' };
   function checkCount() {
     var g = gaps();
-    if (!g.length) return true;
+    if (!g.length) {
+      /* 数量齐了，再看晶振、电容、电阻的参数有没有自己填 */
+      var blank = [];
+      Object.keys(I).forEach(function (t) {
+        if (valKind(t) && !valOf(t)) blank.push(I[t].def.ref);
+      });
+      if (blank.length) {
+        setStatus('元器件数量对了，但 <b>' + blank.join('、') + '</b> 的' +
+          '参数还没填。点图上的元件，在右边框里把数值填上（只填数字，单位不用写）。', 'bad');
+        return false;
+      }
+      return true;
+    }
     if (countAll().got === 0) {
       CATS.forEach(function (c) {
         var box = document.querySelector('.wtray[data-tray="' + c + '"]');
@@ -1243,6 +1340,13 @@
           var lack = k.need - countKind(k);
           for (var n = 0; n < lack; n++) placeKind(k.id, true);
         });
+        /* 演示要能一路走到底：参数按标准取值填好，学生自己练时仍要手填 */
+        var DEMO_VAL = { X1: '12', CAP: '22', RES: '220' };
+        Object.keys(I).forEach(function (t) {
+          var k = valKind(t);
+          if (k && !valOf(t)) VAL[t] = DEMO_VAL[k];
+        });
+        Object.keys(I).forEach(function (t) { redrawPart(t); });
         refreshTrays();
         startBtn.click();
         if (mode !== 'wire') return;
@@ -1293,6 +1397,7 @@
   window.MinsysWire = {
     run: runProgram,
     blink: runProgram,
+    stop: lampOff,
     refresh: function () { refreshTrays(); updateProgress(); },
     placeAll: function () {
       KINDS.forEach(function (k) {

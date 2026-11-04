@@ -5,13 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>实验台 · 最小系统大师</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a1824'/%3E%3Ccircle cx='16' cy='7' r='4' fill='%23b8382f'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23c08d1c'/%3E%3Ccircle cx='16' cy='25' r='4' fill='%232a6c9e'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261023j2">
+<link rel="stylesheet" href="style.css?v=20261023k3">
 <script>try{var t=localStorage.getItem('minsys_theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
-<script src="ui.js?v=20261023j2" defer></script>
+<script src="ui.js?v=20261023k1" defer></script>
 </head>
 <body>
-<script>if(location.protocol==='file:'){document.write('<div style="margin:0;padding:16px 22px;background:#fff4d6;border-bottom:3px solid #d98b00;color:#6b4200;font:15px/1.7 \'Microsoft YaHei\',sans-serif"><b>这个页面不能直接双击打开。</b> 请回到上一级文件夹双击 <b>启动.bat</b>，再访问 http://localhost:3000 。</div>');}</script>
-
 <svg class="svg-sprite" aria-hidden="true">
   <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
     <rect x="7" y="7" width="10" height="10" rx="1"/>
@@ -36,9 +34,12 @@
   <div class="topbar-right">
     <span class="bar-lamps" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="b"></i></span>
     <span class="bar-acts">
-      <a class="ibtn" href="./" data-tip="返回封面" aria-label="返回封面">
+      <a class="ibtn" href="index.html" data-tip="返回封面" aria-label="返回封面">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6V19a1 1 0 0 1-1 1h-4.2v-5H9.2v5H5a1 1 0 0 1-1-1z"/></svg>
       </a>
+      <button class="ibtn" type="button" id="wipeBtn" data-tip="清除全部记录，从头再练一遍" aria-label="清除全部记录">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 6.2h16.8"/><path d="M8.5 6.2V4.6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1.6"/><path d="M6.2 6.2 7 19a1.4 1.4 0 0 0 1.4 1.3h7.2A1.4 1.4 0 0 0 17 19l.8-12.8"/><path d="M10.2 10v6.4M13.8 10v6.4"/></svg>
+      </button>
       <button class="ibtn" type="button" data-act="theme" data-tip="切换为暗色主题" aria-label="切换主题">
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/></svg>
@@ -151,6 +152,29 @@
             <g id="gBars"></g>
             <g id="gConns"></g>
             <g id="gBlocks"></g>
+            <g id="gIntro">
+              <g class="intro-chip" id="introChip" role="button" tabindex="0" aria-label="80C51 单片机，点击查看内部结构">
+                <g class="intro-pins" id="introPinsL"></g>
+                <g class="intro-pins" id="introPinsR"></g>
+                <rect class="intro-body" x="115" y="110" width="630" height="330" rx="5"/>
+                <rect class="intro-frame" x="127" y="122" width="606" height="306" rx="3"/>
+                <path class="intro-corner" d="M115 128 v-13 a5 5 0 0 1 5 -5 h13"/>
+                <path class="intro-corner" d="M745 128 v-13 a5 5 0 0 0 -5 -5 h-13"/>
+                <path class="intro-corner" d="M115 422 v13 a5 5 0 0 0 5 5 h13"/>
+                <path class="intro-corner" d="M745 422 v13 a5 5 0 0 1 -5 5 h-13"/>
+                <text class="intro-meta" x="145" y="146" text-anchor="start">DIP-40</text>
+                <text class="intro-meta" x="715" y="146" text-anchor="end">8 位 · 4KB ROM</text>
+                <line class="intro-rule" x1="145" y1="158" x2="715" y2="158"/>
+                <text class="intro-name" x="430" y="255" text-anchor="middle">80C51</text>
+                <text class="intro-sub" x="430" y="286" text-anchor="middle">单 片 机</text>
+                <g class="intro-tip" id="introHint">
+                  <rect class="intro-tip-bg" x="346" y="330" width="168" height="30" rx="15"/>
+                  <text class="intro-tip-t" x="430" y="350" text-anchor="middle">点击查看内部结构</text>
+                </g>
+                <rect class="intro-hit" x="115" y="110" width="630" height="330" rx="5"/>
+              </g>
+            </g>
+            </g>
             <g id="gFlow">
               <line id="trail" class="trail" x1="0" y1="0" x2="0" y2="0"/>
               <g id="pkt" class="pkt"><rect rx="9"/><text text-anchor="middle"></text></g>
@@ -159,6 +183,7 @@
           <div class="flow-bar" id="flowBar">
             <span class="fb-k" id="flowK">总线</span>
             <span class="fb-t" id="flowT">点方块看它管什么；点三条总线，看数据在部件之间怎么走。</span>
+            <button class="fb-replay" id="coreReset" type="button" hidden>重置演示</button>
             <button class="fb-replay" id="flowReplay" type="button" hidden>重播</button>
           </div>
         </div>
@@ -268,8 +293,8 @@
   </div>
 </div>
 
-<script src="lab.js?v=20261023j2"></script>
-<script src="lab-wire.js?v=20261023j2"></script>
-<script src="lab-quiz.js?v=20261023j2"></script>
+<script src="lab.js?v=20261023k7"></script>
+<script src="lab-wire.js?v=20261023m1"></script>
+<script src="lab-quiz.js?v=20261023k8"></script>
 </body>
 </html>

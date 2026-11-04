@@ -306,7 +306,7 @@
   }
 
   /* ---------------- 片内结构 ----------------
-     一张方块图：八个部件骑在三条总线上，点方块出说明，点总线放一段传输动画
+     一张方块图：六个部件骑在三条总线上，点方块出说明，点总线放一段传输动画
      -------------------------------------------- */
   var coreStage = document.getElementById('coreStage');
   var coreInfo = document.getElementById('coreInfo');
@@ -320,6 +320,12 @@
   var flowK = document.getElementById('flowK');
   var flowT = document.getElementById('flowT');
   var flowReplay = document.getElementById('flowReplay');
+  var gIntro = document.getElementById('gIntro');
+  var introChip = document.getElementById('introChip');
+  var introHint = document.getElementById('introHint');
+  var introPinsL = document.getElementById('introPinsL');
+  var introPinsR = document.getElementById('introPinsR');
+  var coreReset = document.getElementById('coreReset');
   var seenCore = {};
   var coreReady = false;
 
@@ -346,6 +352,17 @@
     io:   { db: 'both', ab: 'in', cb: 'both' },
     sio:  { db: 'both', ab: 'in', cb: 'both' }
   };
+  /* ---- 开场黑框的引脚：左右各 18 根，贴着框边等距排开 ---- */
+  (function drawIntroPins() {
+    var BH = 330, PINS = 14;
+    var BX = 115, BW = 630, BY = 110;
+    for (var i = 0; i < PINS; i++) {
+      var y = BY + 26 + i * ((BH - 52) / (PINS - 1));
+      svgEl('rect', { x: BX - 28, y: y - 3, width: 30, height: 6, rx: 1.5, 'class': 'intro-pin' }, introPinsL);
+      svgEl('rect', { x: BX + BW - 2, y: y - 3, width: 30, height: 6, rx: 1.5, 'class': 'intro-pin' }, introPinsR);
+    }
+  })();
+
   function laneX(key, bk) { return BOX[key].x + LANE[bk]; }
   function edgeY(key) { var b = BOX[key]; return b.up ? b.y + b.h : b.y; }
   function anchor(key, bk) {
@@ -358,7 +375,7 @@
     var g = svgEl('g', { 'class': 'bus bus-' + bk, 'data-k': bk }, gBars);
     svgEl('line', { x1: BX0, y1: BAR[bk], x2: BX1, y2: BAR[bk], 'class': 'bus-casing' }, g);
     svgEl('line', { x1: BX0, y1: BAR[bk], x2: BX1, y2: BAR[bk], 'class': 'bus-line ' + bk }, g);
-    svgEl('text', { x: BX1, y: BAR[bk] - 9, 'text-anchor': 'end', 'class': 'bus-code' }, g).textContent = BAR_TXT[bk];
+    svgEl('text', { x: BX1, y: BAR[bk] - 13, 'text-anchor': 'end', 'class': 'bus-code' }, g).textContent = BAR_TXT[bk];
   });
 
   /* ---- 画方块与它的三条竖向接入线 ---- */
@@ -396,11 +413,11 @@
   });
   /* ---- 中断源：四路请求直接进 CPU 底部 ---- */
   var gInt = svgEl('g', { 'class': 'blk blk-int', 'data-k': 'int' }, gBlocks);
-  svgEl('rect', { x: 38, y: 386, width: 136, height: 78, 'class': 'int-hit' }, gInt);
+  svgEl('rect', { x: 26, y: 426, width: 150, height: 78, 'class': 'int-hit' }, gInt);
   [60, 87, 114, 141].forEach(function (x) {
-    svgEl('line', { x1: x, y1: 428, x2: x, y2: 394, 'class': 'int-arw', 'marker-start': 'url(#ar-cb)' }, gInt);
+    svgEl('line', { x1: x, y1: 468, x2: x, y2: 434, 'class': 'int-arw', 'marker-start': 'url(#ar-cb)' }, gInt);
   });
-  svgEl('text', { x: 101, y: 452, 'text-anchor': 'middle', 'class': 'ext-lb' }, gInt).textContent = '中断源';
+  svgEl('text', { x: 101, y: 492, 'text-anchor': 'middle', 'class': 'ext-lb' }, gInt).textContent = '中断源';
 
   /* ---- 三处对外标注：频率基准源、并行 I/O 口、串行输入输出 ---- */
   svgEl('text', { x: 101, y: 30, 'text-anchor': 'middle', 'class': 'ext-lb' }, gBlocks).textContent = '频率基准源';
@@ -461,6 +478,141 @@
       '<div class="pi-use used"><span class="lb">本课</span><span class="tx">' + d.note + '</span></div>' +
       '<div class="pi-meta mono">动画在图下重播 &nbsp;·&nbsp; ' + b.full + '</div>';
   }
+
+  /* ---------------- 开场：从芯片外形长成片内结构 ----------------
+     叙事顺序：芯片实物 → 点击 → 塑封体抬起、引脚收回 → 芯片压成三根总线
+     → CPU 先立起来 → 其余部件围着它长出来 → 对外标注补齐。
+     不提供跳过，每次进这一段都完整走一遍。
+     ------------------------------------------------------------ */
+  var GROW = ['cpu', 'clk', 'rom', 'ram', 'tcon', 'io', 'sio', 'int'];
+  var introAnims = [];
+  var introTimers = [];
+  var introState = 'chip';      /* chip | growing | done */
+  var INTRO_BARS = [230, 300, 370];
+
+  function coreBoot() {
+    Array.prototype.forEach.call(coreSvg.querySelectorAll('.blk, .bus, .conn, .ext-lb, .ext-arw, .int-arw, .int-hit'),
+      function (n) { n.classList.remove('grow', 'grow-now'); });
+    coreReset.hidden = true;
+    gIntro.style.display = '';
+    introChip.style.display = '';
+    gBars.style.opacity = 0;
+    gBlocks.style.opacity = 0;
+    gConns.style.opacity = 0;
+    introHint.style.opacity = 1;
+    flowK.textContent = '片内';
+    flowT.textContent = '先看清这颗芯片，点它一下，内部结构才展开。';
+    flowReplay.hidden = true;
+    coreStage.classList.remove('focus-blk', 'flowing', 'growing');
+    introState = 'chip';
+    coreInfo.innerHTML = '<div class="pi-empty">' +
+      '<svg class="ico"><use href="#i-chip"/></svg>' +
+      '<p>片内不是一整块黑塑料，是一套完整的计算机。先点芯片，再点方块看它管什么，点总线看数据怎么走。</p></div>';
+  }
+
+  function anim(node, frames, opts) {
+    var a = node.animate(frames, opts);
+    introAnims.push(a);
+    return a;
+  }
+
+  function after(ms, fn) {
+    introTimers.push(setTimeout(function () { fn(); }, ms));
+  }
+
+  function playIntro() {
+    if (introState !== 'chip') return;
+    introState = 'growing';
+    coreStage.classList.add('growing');
+    introHint.style.opacity = 0;
+    flowK.textContent = '片内';
+    flowT.textContent = '黑框打开，里面是三条总线加六个部件。';
+    flowReplay.hidden = true;
+
+    var body = introChip.querySelector('.intro-body');
+
+    /* ① 框体先弹一下再炸开：缩放 + 淡化，220ms */
+    anim(introChip, [
+      { opacity: 1, transform: 'scale(1)' },
+      { opacity: 1, transform: 'scale(1.035)', offset: .28 },
+      { opacity: 0, transform: 'scale(1.16)' }
+    ], { duration: 380, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' });
+
+    /* ② 引脚逐根甩出去，越靠边飞得越远、转得越斜，形成扇形 */
+    Array.prototype.forEach.call(introPinsL.children, function (n, i) {
+      var d = 120 + (i % 8) * 16;
+      anim(n, [
+        { opacity: 1, transform: 'none' },
+        { opacity: 1, transform: 'translateX(-14px) scaleX(1.3)', offset: .18 },
+        { opacity: 0, transform: 'translateX(-' + d + 'px) rotate(' + (-6 - (i % 5) * 3) + 'deg)' }
+      ], { duration: 460, delay: i * 9, easing: 'cubic-bezier(.3,0,.4,1)', fill: 'forwards' });
+    });
+    Array.prototype.forEach.call(introPinsR.children, function (n, i) {
+      var d = 120 + (i % 8) * 16;
+      anim(n, [
+        { opacity: 1, transform: 'none' },
+        { opacity: 1, transform: 'translateX(14px) scaleX(1.3)', offset: .18 },
+        { opacity: 0, transform: 'translateX(' + d + 'px) rotate(' + (6 + (i % 5) * 3) + 'deg)' }
+      ], { duration: 460, delay: i * 9, easing: 'cubic-bezier(.3,0,.4,1)', fill: 'forwards' });
+    });
+
+    /* ③ 结构从中心浮现，120ms 后开始，边抛边露 */
+    after(120, function () {
+      gBars.style.opacity = 1;
+      gBlocks.style.opacity = 1;
+      gConns.style.opacity = 1;
+      Array.prototype.forEach.call(gBars.querySelectorAll('.bus'), function (b, i) {
+        after(i * 55, function () { b.classList.add('grow'); });
+      });
+      GROW.forEach(function (key, i) {
+        after(i * 60, function () {
+          var blk = gBlocks.querySelector('.blk[data-k="' + key + '"]');
+          if (blk) blk.classList.add('grow');
+          var sel = key === 'cpu' ? '[data-k^="cpu:"]' : '[data-k^="' + key + ':"]';
+          Array.prototype.forEach.call(gConns.querySelectorAll(sel), function (c) { c.classList.add('grow'); });
+        });
+      });
+      Array.prototype.forEach.call(coreSvg.querySelectorAll('.ext-lb, .ext-arw, .int-arw'), function (n) {
+        n.classList.add('grow-now');
+      });
+      after(GROW.length * 60 + 200, function () {
+        gIntro.style.display = 'none';
+        finishIntro();
+      });
+    });
+  }
+
+  function finishIntro() {
+    introState = 'done';
+    coreStage.classList.remove('growing');
+    Array.prototype.forEach.call(coreSvg.querySelectorAll('.grow, .grow-now'),
+      function (n) { n.classList.remove('grow', 'grow-now'); });
+    coreReset.hidden = false;
+    flowK.textContent = '部件';
+    flowT.textContent = '点方块看它管什么；点三条总线，看数据在部件之间怎么走。';
+    coreInfo.innerHTML = '<div class="pi-empty">' +
+      '<svg class="ico"><use href="#i-chip"/></svg>' +
+      '<p>六个部件都骑在三条总线上，CPU 在左边指挥。点方块看它管什么，点总线看数据怎么走。</p></div>';
+  }
+
+  function clearIntro() {
+    introAnims.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+    introAnims = [];
+    introTimers.forEach(function (t) { clearTimeout(t); });
+    introTimers = [];
+  }
+
+  introChip.addEventListener('click', playIntro);
+  introChip.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playIntro(); }
+  });
+  coreReset.addEventListener('click', function () {
+    clearIntro();
+    stopFlow();
+    coreBoot();
+  });
+
+  coreBoot();
 
   /* ---- 点方块 / 点总线 ---- */
   Array.prototype.forEach.call(gBlocks.querySelectorAll('.blk'), function (n) {

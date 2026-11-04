@@ -83,12 +83,12 @@
       pop: {
         kind: 'summary',
         kicker: '项目总结 · 02 看片内',
-        title: '八个部件，三条总线',
+        title: '六个部件，三条总线',
         rows: [
           ['3 条', '总线', 'AB 16 位单向送地址，DB 8 位双向传数据与指令，CB 逐根传送读写与中断信号。'],
           ['4KB', 'ROM 程序存储器', '占 0000H—0FFFH，断电不丢；复位后从 0000H 取第一条指令。'],
           ['128B', 'RAM 数据存储器', '存变量、堆栈与中间结果，一断电就清空，和 ROM 分工明确。'],
-          ['8 个', '部件各司其职', 'CPU、振荡器、ROM、RAM、定时器、I/O 口、串口、中断源，都挂在三条总线上。']
+          ['6 个', '部件各司其职', 'CPU、振荡器、ROM、RAM、定时器、I/O 口都挂在三条总线上；串口与中断源在外围，本课不深入。']
         ],
         line: '看片内不是背名词，是知道程序跑起来的时候，哪个部件在干哪件活。'
       }
@@ -258,8 +258,9 @@
     p.btn.classList.toggle('ghost', st !== 'ready');
     p.btn.classList.toggle('glow', st === 'ready');
     p.btn.hidden = (st === 'open');
-    /* 这一段要先接线再写程序：线没接完，按钮不放开 */
-    p.btn.disabled = (st === 'lock' && sec.type === 'code');
+    /* 任务没做完（lock）就不放开按钮：认引脚要点满四类、连线台要接完 18 条、
+       编程题要先接完线。只有 ready（任务已完成）或 passed（已通过看总结）才可点。 */
+    p.btn.disabled = (st === 'lock');
     p.btn.innerHTML = (st === 'passed') ? '再看一遍总结<i>→</i>' : '完成练习<i>→</i>';
 
     if (st === 'lock' || st === 'ready') p.hint.textContent = sec.hint(prog[key].got, prog[key].need);
@@ -285,6 +286,16 @@
     updateCta(box, key);
 
     box.querySelector('[data-act="start"]').addEventListener('click', function () {
+      if (state[key] === 'lock') {
+        /* 双保险：即便按钮被强行触发，也进不去 */
+        var hint = box.querySelector('.ct-hint');
+        if (hint) {
+          hint.classList.remove('nudge');
+          void hint.offsetWidth;
+          hint.classList.add('nudge');
+        }
+        return;
+      }
       if (state[key] === 'passed') { showPop(key); return; }
       if (state[key] === 'open') { reveal(box); return; }
       if (sec.type === 'code') { openCode(box, key); return; }
@@ -446,7 +457,11 @@
       if (rp) rp.addEventListener('click', function () {
         if (window.MinsysWire.run) window.MinsysWire.run();
       });
-      setTimeout(function () { showPop(key); }, 6600);
+      /* 三个灯一直循环亮着，到弹总结的那一刻才熄 */
+      setTimeout(function () {
+        if (window.MinsysWire && window.MinsysWire.stop) window.MinsysWire.stop();
+        showPop(key);
+      }, 6600 + 5000);
     }
 
     body.querySelectorAll('.cblk').forEach(function (inp) {
